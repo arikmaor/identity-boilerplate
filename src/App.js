@@ -1,5 +1,6 @@
 import '@reshuffle/code-transform/macro';
 import React, { useCallback, useState } from 'react';
+import {useDropzone} from 'react-dropzone'
 
 import { useAuth } from '@reshuffle/react-auth';
 
@@ -45,6 +46,7 @@ function useFileUpload() {
   const [uploading, setUploading] = useState(false);
 
   const onChangeHandler = useCallback(async (e) => {
+    window.xfiles = e.target.files;
     const filesArr = Array.from(e.target.files)
     setFiles(filesArr);
 
@@ -70,7 +72,6 @@ function useFileUpload() {
     uploading,
     inputProps: {
       type: 'file',
-      name: 'file',
       onChange: onChangeHandler
     }
   }
@@ -88,6 +89,8 @@ function App() {
 
   const { inputProps, uploading, files } = useFileUpload();
 
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop: files => inputProps.onChange({target: {files}})});
+
   const onClickHandler = useCallback((e) => {
     console.log('upload')
   }, []);
@@ -103,7 +106,7 @@ function App() {
     <ContentWrapper>
       {
         authenticated ? (
-          <div style={profileStyle}>
+          <div style={profileStyle} {...getRootProps()}>
             <img src={profile.picture}
                  alt='user profile'
             />
@@ -111,7 +114,8 @@ function App() {
             <a style={linkStyle} href={getLogoutURL()}>Logout</a>
             <div>
               <div>
-                <input multiple {...inputProps}/>
+                <div>isDragActive: {isDragActive.toString()}</div>
+                <input multiple {...getInputProps({onChange: () => {console.log('onchange')}})}/>
                 <button onClick={onClickHandler}>Upload!</button>
               </div>
               {files.map(({name}) => (
