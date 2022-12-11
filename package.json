@@ -18,7 +18,7 @@
     "@reshuffle/passport": "^0.2.0",
     "@reshuffle/react-auth": "^0.1.7",
     "@reshuffle/server-function": "^0.2.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-fileupload": "^1.1.6",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
